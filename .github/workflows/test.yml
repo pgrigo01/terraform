@@ -70,9 +70,9 @@ jobs:
             ${{ runner.os }}-go-
 
       # New steps added for additional cache and extraction
-      - name: Cache Go Modules (v2)
+      - name: Cache Go Modules (v3)
         id: cache-go-mod
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cache/go-build
@@ -131,9 +131,9 @@ jobs:
             ${{ runner.os }}-go-
 
       # New steps added for additional cache and extraction
-      - name: Cache Go Modules (v2)
+      - name: Cache Go Modules (v3)
         id: cache-go-mod
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cache/go-build
@@ -147,7 +147,7 @@ jobs:
           tar -xzf /path/to/cache.tar.gz || echo "Warning: Failed to extract cache"
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ matrix.terraform }}
           terraform_wrapper: false

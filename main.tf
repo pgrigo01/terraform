@@ -27,6 +27,7 @@ provider "cloudlab" {
 # terraform init
 # terraform workspace new workspace1
 # terraform workspace select workspace1 
+# terraform workspace list //to see the workspaces
 
 #IF ON WORKSPACE 2 (if you have a second one) Do this to differentiate the resources accross workspaces
 # terraform init
