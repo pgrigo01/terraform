@@ -86,7 +86,7 @@ jobs:
           tar -xzf /path/to/cache.tar.gz || echo "Warning: Failed to extract cache"
 
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: '1.9.5'
           terraform_wrapper: false
