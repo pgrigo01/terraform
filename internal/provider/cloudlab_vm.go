@@ -3,13 +3,14 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"strings"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -91,28 +92,33 @@ func (r *cloudlabvmResource) Configure(ctx context.Context, req resource.Configu
 	}
 
 	client, ok := req.ProviderData.(Client)
-
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
 			fmt.Sprintf("Expected *provider.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
-
 		return
 	}
-
 	r.client = client
 }
 
 // Create creates the resource and sets the initial Terraform state.
 func (r *cloudlabvmResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Retrieve values from plan
+	// Retrieve values from plan.
 	var plan cloudlabvmModel
 	diags := req.Plan.Get(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
+	// Compute the full experiment name using the base name and the workspace from the client.
+	baseName := plan.Name.String()
+	workspace := r.client.workspace
+	if workspace == "" {
+		workspace = "default"
+	}
+	computedName := fmt.Sprintf("%s-%s", baseName, workspace)
 
 	sharedvlans := func() string {
 		var vlans []map[string]string
@@ -134,13 +140,13 @@ func (r *cloudlabvmResource) Create(ctx context.Context, req resource.CreateRequ
 	}()
 
 	tflog.Info(ctx, sharedvlans)
-
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
+	// Use the computedName for API calls, while preserving the original base name in state.
 	params := map[string]string{
-		"name":        plan.Name.String(),
+		"name":        computedName,
 		"routable_ip": plan.Routable_ip.String(),
 	}
 	AddImageParam(&params, plan.Image.String())
@@ -150,7 +156,6 @@ func (r *cloudlabvmResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	_, err := r.client.startExperiment(params)
-
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating vm",
@@ -159,7 +164,7 @@ func (r *cloudlabvmResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 
-	response, status, err := r.client.experimentStatus(plan.Name.String())
+	response, status, err := r.client.experimentStatus(computedName)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading vm status",
@@ -172,13 +177,12 @@ func (r *cloudlabvmResource) Create(ctx context.Context, req resource.CreateRequ
 			"Error reading vm status",
 			"vm status not exists, unexpected error: "+err.Error(),
 		)
-
 	} else {
 		plan.Uuid = types.StringValue(response["UUID"])
-		tflog.Info(ctx, "Experiment exists with name: "+plan.Name.String())
+		tflog.Info(ctx, "Experiment exists with name: "+computedName)
 	}
 
-	// Set state to fully populated data
+	// Set state using the original base name.
 	diags = resp.State.Set(ctx, plan)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -194,7 +198,16 @@ func (r *cloudlabvmResource) Read(ctx context.Context, req resource.ReadRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	response, status, err := r.client.experimentStatus(state.Name.String())
+
+	// Recompute the full experiment name from the base name in state and the workspace from the client.
+	baseName := state.Name.String()
+	workspace := r.client.workspace
+	if workspace == "" {
+		workspace = "default"
+	}
+	computedName := fmt.Sprintf("%s-%s", baseName, workspace)
+
+	response, status, err := r.client.experimentStatus(computedName)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading vm status",
@@ -207,8 +220,8 @@ func (r *cloudlabvmResource) Read(ctx context.Context, req resource.ReadRequest,
 		tflog.Info(ctx, "Experiment not exists")
 	} else {
 		state.Uuid = types.StringValue(response["UUID"])
-		tflog.Info(ctx, "Experiment exists with name: "+state.Name.String())
-		//Set state
+		tflog.Info(ctx, "Experiment exists with name: "+computedName)
+		// Preserve the original base name in state.
 		diags = resp.State.Set(ctx, &state)
 	}
 
@@ -244,7 +257,7 @@ func (r *cloudlabvmResource) Delete(ctx context.Context, req resource.DeleteRequ
 		return
 	}
 
-	// Delete existing order
+	// Delete existing experiment.
 	_, err := r.client.terminateExperiment(state.Uuid.String())
 	if err != nil {
 		resp.Diagnostics.AddError(

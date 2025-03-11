@@ -11,11 +11,11 @@ import (
 	"strings"
 )
 
-//const HostURL = "http://localhost:8080/"
+const HostURL = "http://localhost:8080/"
 
 //const HostURL = "http://155.98.36.7:8080/"
 
-const HostURL = "http://terraform-cloudlab.duckdns.org:8080/"
+//const HostURL = "http://terraform-cloudlab.duckdns.org:8080/"
 
 const experimentPath = "experiment"
 
@@ -27,9 +27,11 @@ const (
 	EXPERIMENT_NOT_EXISTS = 3
 )
 
+// Updated Client struct now includes the workspace field.
 type Client struct {
 	credentialsPath string
 	project         string
+	workspace       string
 }
 
 func (c *Client) startExperiment(params map[string]string) (string, error) {

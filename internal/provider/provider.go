@@ -39,10 +39,11 @@ func (p *cloudlabProvider) Metadata(_ context.Context, _ provider.MetadataReques
 	resp.Version = p.version
 }
 
-// hashicupsProviderModel maps provider schema data to a Go type.
+// cloudlabProviderModel maps provider schema data to a Go type.
 type cloudlabProviderModel struct {
 	Credentials_path types.String `tfsdk:"credentials_path"`
 	Project          types.String `tfsdk:"project"`
+	Workspace        types.String `tfsdk:"workspace"` // New attribute for workspace
 }
 
 // Schema defines the provider-level schema for configuration data.
@@ -56,6 +57,10 @@ func (p *cloudlabProvider) Schema(_ context.Context, _ provider.SchemaRequest, r
 			"project": schema.StringAttribute{
 				Required:  true,
 				Sensitive: true,
+			},
+			"workspace": schema.StringAttribute{
+				Optional:    true,
+				Description: "The Terraform workspace to use. Defaults to 'default' if not provided.",
 			},
 		},
 	}
@@ -97,27 +102,24 @@ func (p *cloudlabProvider) Configure(ctx context.Context, req provider.Configure
 		return
 	}
 
-	// Default values to environment variables, but override
-	// with Terraform configuration value if set.
-
+	// Default values to environment variables, but override with Terraform configuration value if set.
 	credentials_path := os.Getenv("CLOUDLAB_CREDENTIALS_PATH")
-
 	if !config.Credentials_path.IsNull() {
 		credentials_path = config.Credentials_path.ValueString()
 	}
 
-	// Default values to environment variables, but override
-	// with Terraform configuration value if set.
-
 	project := os.Getenv("CLOUDLAB_PROJECT")
-
 	if !config.Project.IsNull() {
 		project = config.Project.ValueString()
 	}
 
-	// If any of the expected configurations are missing, return
-	// errors with provider-specific guidance.
+	// Use "default" if workspace is not set.
+	workspace := "default"
+	if !config.Workspace.IsNull() && config.Workspace.ValueString() != "" {
+		workspace = config.Workspace.ValueString()
+	}
 
+	// If any of the expected configurations are missing, return errors with provider-specific guidance.
 	if credentials_path == "" {
 		resp.Diagnostics.AddAttributeError(
 			path.Root("host"),
@@ -142,11 +144,11 @@ func (p *cloudlabProvider) Configure(ctx context.Context, req provider.Configure
 		return
 	}
 
-	// Make the client available during DataSource and Resource
-	// type Configure methods.
+	// Make the client available during DataSource and Resource type Configure methods.
 	client := Client{
 		credentialsPath: credentials_path,
 		project:         project,
+		workspace:       workspace,
 	}
 	resp.DataSourceData = client
 	resp.ResourceData = client
