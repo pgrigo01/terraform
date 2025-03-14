@@ -22,4 +22,4 @@ go.work
 
 cloudlab-decrypted.pem
 terraform.tfstate
-terraform.tfstate.backup
+terraform.tfstate.backup.terraform.lock.hcl
