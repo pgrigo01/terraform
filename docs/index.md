@@ -28,4 +28,4 @@ provider "cloudlab" {
 
 ### Optional
 
-- `workspace` (String) The Terraform workspace to use. Defaults to 'default' if not provided.
+- `workspace` (String) The Terraform workspace to use. Defaults to 'default'.
