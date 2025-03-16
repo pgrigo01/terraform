@@ -69,7 +69,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      # New steps added for additional cache and extraction
+      # New steps added for additional cache (tar extraction step removed)
       - name: Cache Go Modules (v3)
         id: cache-go-mod
         uses: actions/cache@v3
@@ -80,10 +80,6 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-
-      - name: Extract Go Modules Cache
-        run: |
-          tar -xzf usr/bin/tar/cache.tar.gz || echo "Warning: Failed to extract cache"
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
@@ -130,7 +126,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      # New steps added for additional cache and extraction
+      # New steps added for additional cache (tar extraction step removed)
       - name: Cache Go Modules (v3)
         id: cache-go-mod
         uses: actions/cache@v3
@@ -141,10 +137,6 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-
-      - name: Extract Go Modules Cache
-        run: |
-          tar -xzf usr/bin/tar/cache.tar.gz || echo "Warning: Failed to extract cache"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
