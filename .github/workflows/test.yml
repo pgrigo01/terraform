@@ -69,18 +69,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      # New steps added for additional cache (tar extraction step removed)
-      - name: Cache Go Modules (v3)
-        id: cache-go-mod
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            /go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -122,18 +110,6 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
-      # New steps added for additional cache (tar extraction step removed)
-      - name: Cache Go Modules (v3)
-        id: cache-go-mod
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            /go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
