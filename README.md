@@ -16,13 +16,13 @@ The [CloudLab Provider](https://registry.terraform.io/providers/hashicorp/aws/la
 ## Usage Example
 ```
 #When changing versions run:
-# terraform init -upgrade 
+# terraform init -upgrade or terraform init
 
 #If first time run : terraform init 
 #If you want to see the changes in the plan  run: terraform plan 
 #If you want to apply the plan run: terraform apply 
 
-#version = "2.2.0" //for locallhost 
+
 #version = "3.0.0" //works with duckdns when running the server not working on ucy wifi otan allazo vms 
 # If a new vm is added and the server is running on the ucy wifi then change the HostURL to the new vm's ip address 
 # and build the provider with ./buildprovider.sh 
@@ -32,15 +32,17 @@ terraform {
   required_providers {
     cloudlab = {
       source  = "pgrigo01/cloudlab" # this directory is under the .terraform directory
-      version = "2.2.0"
+      version = "4.0.1" //current working version
     }
   }
 }
 
 provider "cloudlab" {
   project          = "UCY-CS499-DC"
-  credentials_path = "cloudlab-decrypted.pem" # path to the credentials file that is downloaded from CloudLab and decrypted
+  credentials_path = "cloudlab-decrypted.pem"
+  workspace        = terraform.workspace //passes the current workspace to the provider
 }
+
 # terraform init
 # terraform workspace new workspace1
 # terraform workspace select workspace1 
@@ -51,24 +53,39 @@ provider "cloudlab" {
 # terraform workspace new workspace2
 # terraform workspace select workspace2
 
-#Then uncon=mment the following code and run terraform apply 
+#Then uncomment the following code and run terraform apply 
 
-# resource "cloudlab_vlan" "my_vlan" {
-#   name        = "vlan-${terraform.workspace}"
-#   subnet_mask = "255.255.255.0"
-# }
+resource "cloudlab_vlan" "my_vlan" {
+  name        = "vlan"
+  subnet_mask = "255.255.255.0"
+}
 
 # resource "cloudlab_vm" "my_vm" {
-#   name         = "vm1-${terraform.workspace}"
+#   name         = "vm1"
 #   routable_ip  = true
 #   image        = "UBUNTU 20.04"
-#   aggregate    = "Any"
+#   aggregate    = "emulab.net"
 # }
 
 # resource "cloudlab_vm" "my_vm2" {
-#   name         = "vm2-${terraform.workspace}"
+#   name         = "vm2"
 #   routable_ip  = true
 #   image        = "UBUNTU 20.04"
-#   aggregate    = "Any"
+#   aggregate    = "utah.cloudlab.us"
+# }
+
+
+# resource "cloudlab_vm" "my_vm3" {
+#   name         = "vm3"
+#   routable_ip  = true
+#   image        = "UBUNTU 20.04"
+#   aggregate    = "wisc.cloudlab.us"
+# }
+
+# resource "cloudlab_vm" "my_vm4" {
+#   name         = "vm4"
+#   routable_ip  = true
+#   image        = "UBUNTU 20.04"
+#   aggregate    = "clemson.cloudlab.us"
 # }
 ```
