@@ -15,7 +15,7 @@ terraform {
   required_providers {
     cloudlab = {
       source  = "pgrigo01/cloudlab" # this directory is under the .terraform directory
-      version = "4.0.0"
+      version = "4.0.3"
     }
   }
 }
