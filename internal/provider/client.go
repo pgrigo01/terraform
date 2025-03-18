@@ -18,7 +18,9 @@ const HostURL = "http://localhost:8080/"
 //const HostURL = "http://terraform-cloudlab.duckdns.org:8080/"
 
 const experimentPath = "experiment"
-const profile_uuid = "3cfadd2c-e69d-11ee-9f39-e4434b2381fc"
+//const profile_uuid = "3cfadd2c-e69d-11ee-9f39-e4434b2381fc" //giannis profile //terraform-profile
+const profile_uuid = "d810b358-0416-11f0-af1a-e4434b2381fc" //my profile //terraform-storage
+
 
 const (
     EXPERIMENT_FAILED     = 1
