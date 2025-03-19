@@ -30,12 +30,13 @@ func (r *cloudlabvmResource) Metadata(_ context.Context, req resource.MetadataRe
 }
 
 type cloudlabvmModel struct {
-    Uuid        types.String        `tfsdk:"uuid"`
-    Name        types.String        `tfsdk:"name"`
-    Aggregate   types.String        `tfsdk:"aggregate"`
-    Image       types.String        `tfsdk:"image"`
-    Routable_ip types.Bool          `tfsdk:"routable_ip"`
-    Vlans       []cloudlabVlanModel `tfsdk:"vlans"`
+    Uuid              types.String        `tfsdk:"uuid"`
+    Name              types.String        `tfsdk:"name"`
+    Aggregate         types.String        `tfsdk:"aggregate"`
+    Image            types.String        `tfsdk:"image"`
+    Routable_ip      types.Bool          `tfsdk:"routable_ip"`
+    Extra_disk_space types.Int64         `tfsdk:"extra_disk_space"`
+    Vlans            []cloudlabVlanModel `tfsdk:"vlans"`
 }
 
 func (r *cloudlabvmResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -61,6 +62,10 @@ func (r *cloudlabvmResource) Schema(_ context.Context, _ resource.SchemaRequest,
             },
             "routable_ip": schema.BoolAttribute{
                 Required: true,
+            },
+            "extra_disk_space": schema.Int64Attribute{
+                Optional:    true,
+                Description: "Size of extra_disk_space storage in GB to mount at /mydata. 0 means no extra_disk_space is mounted.",
             },
             "vlans": schema.ListNestedAttribute{
                 Optional: true,
@@ -142,6 +147,11 @@ func (r *cloudlabvmResource) Create(ctx context.Context, req resource.CreateRequ
         "routable_ip": plan.Routable_ip.String(),
     }
 
+    // Add extra_disk_space storage if specified
+    if !plan.Extra_disk_space.IsNull() {
+        params["extra_disk_space"] = fmt.Sprintf("%d", plan.Extra_disk_space.ValueInt64())
+        tflog.Info(ctx, fmt.Sprintf("[Create] Adding extra_disk_space storage: %d GB", plan.Extra_disk_space.ValueInt64()))
+    }
     // Convert friendly "UBUNTU 20.04" -> "urn:publicid:IDN+emulab.net+image+..."
     AddImageParam(ctx, &params, plan.Image.ValueString())
     // Convert friendly "Any" -> ""

@@ -104,8 +104,23 @@ func (c *Client) sendRequest(method string, apiPath string, params map[string]st
     // We only want "bindings" to contain the leftover fields
     delete(params, "name")
     delete(params, "experiment")
-    // Convert leftover params to JSON
-    bindingsJson, err := mapToJSON(params)
+    // Convert leftover params to JSON'
+    
+    // Handle extra_disk_space storage specifically
+    bindings := make(map[string]interface{})
+    if extra_disk_space, ok := params["extra_disk_space"]; ok {
+        delete(params, "extra_disk_space")
+        // Convert string to int for the API
+        bindings["extra_disk_space"] = extra_disk_space
+    }
+
+    // Handle remaining params
+    for k, v := range params {
+        bindings[k] = v
+    }
+
+    // Convert all bindings to JSON
+    bindingsJson, err := mapToJSON(bindings)
     if err != nil {
         return "Error converting to json", -1, err
     }

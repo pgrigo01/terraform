@@ -15,7 +15,7 @@ terraform {
   required_providers {
     cloudlab = {
       source  = "pgrigo01/cloudlab" # this directory is under the .terraform directory
-      version = "4.0.0"
+      version = "4.0.5" 
     }
   }
 }
@@ -43,16 +43,32 @@ resource "cloudlab_vlan" "my_vlan" {
   subnet_mask = "255.255.255.0"
 }
 
-# resource "cloudlab_vm" "my_vm" {
-#   name         = "vm1"
-#   routable_ip  = true
-#   image        = "UBUNTU 20.04"
-#   aggregate    = "Any"
-# }
+resource "cloudlab_vm" "my_vm" {
+  name         = "vm1"
+  routable_ip  = true
+  image        = "UBUNTU 24.04"
+  aggregate    = "emulab.net"
+  extra_disk_space = 50
+}
 
 # resource "cloudlab_vm" "my_vm2" {
 #   name         = "vm2"
 #   routable_ip  = true
 #   image        = "UBUNTU 20.04"
-#   aggregate    = "Any"
+#   aggregate    = "utah.cloudlab.us"
+# }
+
+
+# resource "cloudlab_vm" "my_vm3" {
+#   name         = "vm3"
+#   routable_ip  = true
+#   image        = "UBUNTU 24.04"
+#   aggregate    = "wisc.cloudlab.us"
+# }
+
+# resource "cloudlab_vm" "my_vm4" {
+#   name         = "vm4"
+#   routable_ip  = true
+#   image        = "UBUNTU 24.04"
+#   aggregate    = "clemson.cloudlab.us"
 # }
