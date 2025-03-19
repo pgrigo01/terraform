@@ -38,24 +38,25 @@ provider "cloudlab" {
 
 #Then uncomment the following code and run terraform apply 
 
-resource "cloudlab_vlan" "my_vlan" {
-  name        = "vlan"
-  subnet_mask = "255.255.255.0"
-}
+# resource "cloudlab_vlan" "my_vlan" {
+#   name        = "vlan"
+#   subnet_mask = "255.255.255.0"
+# }
 
-resource "cloudlab_vm" "my_vm" {
-  name         = "vm1"
-  routable_ip  = true
-  image        = "UBUNTU 24.04"
-  aggregate    = "emulab.net"
-  extra_disk_space = 50
-}
+# resource "cloudlab_vm" "my_vm" {
+#   name         = "vm1"
+#   routable_ip  = true
+#   image        = "UBUNTU 20.04"
+#   aggregate    = "emulab.net"
+#   extra_disk_space = 50
+# }
 
 # resource "cloudlab_vm" "my_vm2" {
 #   name         = "vm2"
 #   routable_ip  = true
 #   image        = "UBUNTU 20.04"
 #   aggregate    = "utah.cloudlab.us"
+#   extra_disk_space = 30
 # }
 
 
