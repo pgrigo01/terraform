@@ -36,6 +36,7 @@ type cloudlabvmModel struct {
     Image            types.String        `tfsdk:"image"`
     Routable_ip      types.Bool          `tfsdk:"routable_ip"`
     Extra_disk_space types.Int64         `tfsdk:"extra_disk_space"`
+    Node_count       types.Int64         `tfsdk:"node_count"`
     Vlans            []cloudlabVlanModel `tfsdk:"vlans"`
 }
 
@@ -67,6 +68,10 @@ func (r *cloudlabvmResource) Schema(_ context.Context, _ resource.SchemaRequest,
                 Optional:    true,
                 Description: "Size of extra_disk_space storage in GB to mount at /mydata. 0 means no extra_disk_space is mounted.",
             },
+            "node_count": schema.Int64Attribute{
+            Optional:    true,
+            Description: "Number of nodes to create (1-10)",
+        },
             "vlans": schema.ListNestedAttribute{
                 Optional: true,
                 NestedObject: schema.NestedAttributeObject{
@@ -152,6 +157,16 @@ func (r *cloudlabvmResource) Create(ctx context.Context, req resource.CreateRequ
         params["extra_disk_space"] = fmt.Sprintf("%d", plan.Extra_disk_space.ValueInt64())
         tflog.Info(ctx, fmt.Sprintf("[Create] Adding extra_disk_space storage: %d GB", plan.Extra_disk_space.ValueInt64()))
     }
+
+    // Handle node count
+    nodeCount := int64(1) // default to 1
+    if !plan.Node_count.IsNull() {
+        nodeCount = plan.Node_count.ValueInt64()
+    }
+    params["node_count"] = fmt.Sprintf("%d", nodeCount)
+    tflog.Info(ctx, fmt.Sprintf("[Create] Setting node count to: %d", nodeCount))
+
+
     // Convert friendly "UBUNTU 20.04" -> "urn:publicid:IDN+emulab.net+image+..."
     AddImageParam(ctx, &params, plan.Image.ValueString())
     // Convert friendly "Any" -> ""
