@@ -34,6 +34,7 @@ resource "cloudlab_vm" "my-cloudlab-vm" {
 ### Optional
 
 - `extra_disk_space` (Number) Size of extra_disk_space storage in GB to mount at /mydata. 0 means no extra_disk_space is mounted.
+- `node_count` (Number) Number of nodes to create (1-10)
 - `vlans` (Attributes List) (see [below for nested schema](#nestedatt--vlans))
 
 ### Read-Only

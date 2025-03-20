@@ -48,6 +48,8 @@ provider "cloudlab" {
 #   subnet_mask = "255.255.255.0"
 # }
 
+
+#This resource created 3 nodes on an experiment that have a node-local-dataset of 100GB 
 # resource "cloudlab_vm" "my_vm" {
 #   name         = "vm1"
 #   routable_ip  = true
@@ -63,7 +65,7 @@ provider "cloudlab" {
 #   image        = "UBUNTU 20.04"
 #   aggregate    = "utah.cloudlab.us"
 #   node_count = 2
-#   #extra_disk_space = 30
+#   extra_disk_space = 30
 # }
 
 
