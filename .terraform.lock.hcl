@@ -5,6 +5,6 @@ provider "registry.terraform.io/pgrigo01/cloudlab" {
   version     = "5.0.0"
   constraints = "5.0.0"
   hashes = [
-    "h1:KjnfwP8CnozqONvVsdqMZW8Bhh8NHH24A21Nogz8CxY=",
+    "h1:w7hbY6naYdNalOZQuzjGQjNnYB/NC0WnKd6dO+AON88=",
   ]
 }

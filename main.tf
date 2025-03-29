@@ -21,20 +21,14 @@ provider "cloudlab" {
 }
 
 
-# The following code creates a vlan and 4 VMs. The VMs are created on different aggregates.
-# Then uncomment the following code and run terraform apply 
 
-# resource "cloudlab_vlan" "my_vlan" {
-#   name        = "vlan"
-#   subnet_mask = "255.255.255.0"
-# }
-
+# Uncomment the following code and run terraform apply 
 
 # resource "cloudlab_elastic_vm" "test" {
 #   name               = "elastic1"
 #   release            = "zed"
 #   compute_node_count = 0
-#   os_node_type       = ""   # default:"" is emulab. see node-type.txt for more or visit https://www.cloudlab.us/resinfo.php to see available node types 
+#   os_node_type       = "d430"   # default:"" is emulab. see node-type.txt for more or visit https://www.cloudlab.us/resinfo.php to see available node types 
 #   os_link_speed      = 0
 #   ml2plugin          = "openvswitch"
 #   extra_image_urls   = ""
@@ -42,12 +36,18 @@ provider "cloudlab" {
 
 # resource "cloudlab_elastic_vm" "elastic2" {
 #   name               = "elastic2"
-#   release            = "zed" #zed is for ubuntu 22.04 you can visit the profile to see available releases https://www.cloudlab.us/show-profile.php?uuid=afab050d-0c2c-11f0-af1a-e4434b2381fc
+#   release            = "zed" #zed is the most recent in this profile: ubuntu 22.04 you can visit the profile to see available releases https://www.cloudlab.us/show-profile.php?uuid=afab050d-0c2c-11f0-af1a-e4434b2381fc
 #   compute_node_count = 0
-#   os_node_type       = "c220g1"   # default:"" is emulab. see node-type.txt for more or visit https://www.cloudlab.us/resinfo.php to see available node types 
+#   os_node_type       = "d430"   # default:"" is emulab. see node-type.txt for more or visit https://www.cloudlab.us/resinfo.php to see available node types 
 #   os_link_speed      = 0
 #   ml2plugin          = "openvswitch"
 #   extra_image_urls   = ""
+# }
+
+
+# resource "cloudlab_vlan" "my_vlan" {
+#   name        = "vlan"
+#   subnet_mask = "255.255.255.0"
 # }
 
 # resource "cloudlab_elastic_vm" "elastic3" {
@@ -73,7 +73,7 @@ provider "cloudlab" {
 #   routable_ip  = true
 #   image        = "UBUNTU 20.04"
 #   aggregate    = "emulab.net"
-#   extra_disk_space = 50 # added option to ask for a 50GB local file system mounted at /mydata --> see with df -h
+#   extra_disk_space = 300 # added option to ask for a 50GB local file system mounted at /mydata --> see with command: df -h
 #   node_count = 3 #nodes that are on the same experiment
 # }
 
