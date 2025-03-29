@@ -36,7 +36,7 @@ func (p *cloudlabProvider) Metadata(_ context.Context, _ provider.MetadataReques
 type cloudlabProviderModel struct {
         Credentials_path types.String `tfsdk:"credentials_path"`
         Project          types.String `tfsdk:"project"`
-        Workspace        types.String `tfsdk:"workspace"`
+        //Workspace        types.String `tfsdk:"workspace"`
 }
 
 func (p *cloudlabProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
@@ -50,10 +50,10 @@ func (p *cloudlabProvider) Schema(_ context.Context, _ provider.SchemaRequest, r
                                 Required:  true,
                                 Sensitive: true,
                         },
-                        "workspace": schema.StringAttribute{
-                                Optional:    true,
-                                Description: "The Terraform workspace to use. Defaults to 'default'.",
-                        },
+                        // "workspace": schema.StringAttribute{
+                        //         Optional:    true,
+                        //         Description: "The Terraform workspace to use. Defaults to 'default'.",
+                        // },
                 },
         }
 }
@@ -96,10 +96,10 @@ func (p *cloudlabProvider) Configure(ctx context.Context, req provider.Configure
                 project = config.Project.ValueString()
         }
 
-        workspace := "default"
-        if !config.Workspace.IsNull() && config.Workspace.ValueString() != "" {
-                workspace = config.Workspace.ValueString()
-        }
+        // workspace := "default"
+        // if !config.Workspace.IsNull() && config.Workspace.ValueString() != "" {
+        //         workspace = config.Workspace.ValueString()
+        // }
 
         if credentials_path == "" {
                 resp.Diagnostics.AddAttributeError(
@@ -122,7 +122,7 @@ func (p *cloudlabProvider) Configure(ctx context.Context, req provider.Configure
         client := Client{
                 credentialsPath: credentials_path,
                 project:         project,
-                workspace:       workspace,
+                // workspace:       workspace,
                 elastic:         false, // default; individual resources can flip this
         }
         resp.DataSourceData = client

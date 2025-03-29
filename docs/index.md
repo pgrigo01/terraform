@@ -25,7 +25,3 @@ provider "cloudlab" {
 
 - `credentials_path` (String, Sensitive)
 - `project` (String, Sensitive)
-
-### Optional
-
-- `workspace` (String) The Terraform workspace to use. Defaults to 'default'.
