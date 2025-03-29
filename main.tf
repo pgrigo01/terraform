@@ -10,7 +10,7 @@ terraform {
   required_providers {
     cloudlab = {
       source  = "pgrigo01/cloudlab" # this directory is under the .terraform directory
-      version = "4.0.9" 
+      version = "5.0.0" 
     }
   }
 }
@@ -18,7 +18,6 @@ terraform {
 provider "cloudlab" {
   project          = "UCY-CS499-DC"
   credentials_path = "cloudlab-decrypted.pem"
-  
 }
 
 
