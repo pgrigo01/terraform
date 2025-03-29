@@ -15,7 +15,7 @@ terraform {
   required_providers {
     cloudlab = {
       source  = "pgrigo01/cloudlab" # this directory is under the .terraform directory
-      version = "4.0.7" 
+      version = "4.0.8" 
     }
   }
 }
@@ -48,6 +48,16 @@ provider "cloudlab" {
 #   subnet_mask = "255.255.255.0"
 # }
 
+
+resource "cloudlab_elastic_vm" "test" {
+  name               = "elastic1"
+  release            = "zed"
+  compute_node_count = 0
+  os_node_type       = ""
+  os_link_speed      = 0
+  ml2plugin          = "openvswitch"
+  extra_image_urls   = ""
+}
 
 #This resource created 3 nodes on an experiment that have a node-local-dataset of 100GB 
 # resource "cloudlab_vm" "my_vm" {
