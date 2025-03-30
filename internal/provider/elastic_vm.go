@@ -39,7 +39,7 @@ type elasticVMModel struct {
 
 func (r *elasticVMResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
         // So that Terraform sees it as "cloudlab_elastic_vm"
-        resp.TypeName = "cloudlab_elastic_vm"
+        resp.TypeName = "cloudlab_openstack_experiment"
 }
 
 func (r *elasticVMResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {

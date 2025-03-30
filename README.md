@@ -37,10 +37,12 @@ provider "cloudlab" {
   credentials_path = "cloudlab-decrypted.pem"
 }
 
+
+
 # Uncomment the following code and run terraform apply 
 
-# resource "cloudlab_elastic_vm" "test" {
-#   name               = "elastic1"
+# resource "cloudlab_openstack_experiment" "test" {
+#   name               = "cloudlab_openstack_experiment"
 #   release            = "zed"
 #   compute_node_count = 0
 #   os_node_type       = "d430"   # default:"" is emulab. see node-type.txt for more or visit https://www.cloudlab.us/resinfo.php to see available node types 
@@ -49,7 +51,7 @@ provider "cloudlab" {
 #   extra_image_urls   = ""
 # }
 
-# resource "cloudlab_elastic_vm" "elastic2" {
+# resource "cloudlab_openstack_experiment" "elastic2" {
 #   name               = "elastic2"
 #   release            = "zed" #zed is the most recent in this profile: ubuntu 22.04 you can visit the profile to see available releases https://www.cloudlab.us/show-profile.php?uuid=afab050d-0c2c-11f0-af1a-e4434b2381fc
 #   compute_node_count = 0
@@ -65,7 +67,7 @@ provider "cloudlab" {
 #   subnet_mask = "255.255.255.0"
 # }
 
-# resource "cloudlab_elastic_vm" "elastic3" {
+# resource "cloudlab_openstack_experiment" "elastic3" {
 #   name               = "elastic3"
 #   release            = "zed"
 #   compute_node_count = 0
@@ -75,12 +77,13 @@ provider "cloudlab" {
 #   extra_image_urls   = ""
 # }
 
+
 # extra-disk-space is essentialy a Node-Local-Dataset
 # A Node-Local-Dataset is stored on the local disk of the node and will be deleted when the node is terminated.(not persistent).This is
 # useful if you know you need more storage for an experiment but you don't have to keep it later on.
 
 #This resource creates a node on an experiment that has a node-local-dataset of 50GB 
-# resource "cloudlab_vm" "exp1" {
+# resource "cloudlab_simple_experiment" "exp1" {
 #   name         = "exp1"
 #   routable_ip  = true
 #   image        = "UBUNTU 20.04"
@@ -90,7 +93,7 @@ provider "cloudlab" {
 # }
 
 #These 3 nodes dont have a node-local-dataset but we demonstrate how we can get resources from different clusters
-# resource "cloudlab_vm" "exp2" {
+# resource "cloudlab_simple_experiment" "exp2" {
 #   name         = "exp2"
 #   routable_ip  = true
 #   image        = "UBUNTU 20.04"
@@ -100,14 +103,14 @@ provider "cloudlab" {
 # }
 
 
-# resource "cloudlab_vm" "exp3" {
+# resource "cloudlab_simple_experiment" "exp3" {
 #   name         = "exp3"
 #   routable_ip  = true
 #   image        = "UBUNTU 24.04"
 #   aggregate    = "wisc.cloudlab.us"
 # }
 
-# resource "cloudlab_vm" "exp4" {
+# resource "cloudlab_simple_experiment" "exp4" {
 #   name         = "exp4"
 #   routable_ip  = true
 #   image        = "UBUNTU 24.04"

@@ -26,7 +26,7 @@ type cloudlabvmResource struct {
 }
 
 func (r *cloudlabvmResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "cloudlab_vm"
+	resp.TypeName = "cloudlab_simple_experiment"
 }
 
 type cloudlabvmModel struct {
